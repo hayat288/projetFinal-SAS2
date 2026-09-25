@@ -1,6 +1,6 @@
 const prompt = require('prompt-sync')();{
     function afficherCandidats(liste){
-        if (candidats.length === 0){
+        if (liste.length === 0){
             console.log("aucun candidat trouvé.")
             return;
         }
@@ -27,11 +27,24 @@ const prompt = require('prompt-sync')();{
         }
         return liste;
     }
+
+    function filtrerParParti(liste, partiRecherche) {
+        let resultat = [];
+        for (let i = 0; i < liste.length; i++){
+            let partiCandidat = liste[i].partiPolitique.trim().toLowerCase();
+            let partiSaisi = partiRecherche.trim().toLowerCase();
+            if (partiCandidat === partiSaisi) {
+                resultat[resultat.length] = liste[i];
+            }
+        }
+        return resultat;
+    }
+
   let candidats = [{
 	CIN : "HA213453",
 	nom : "Akhannouch",
 	prenom : "Aziz",
-	partiPolitique : " Rassemblement National des Indépendants ",
+	partiPolitique : "Rassemblement National des Independants ",
 	age: 65,
 	electeurs: []
 },
@@ -39,7 +52,7 @@ const prompt = require('prompt-sync')();{
     CIN : "FA812354",
 	nom : "Benkirane",
 	prenom : "Abdelilah",
-	partiPolitique : " Parti de la Justice et du Développement",
+	partiPolitique : "Parti de la Justice et du Developpement",
 	age: 72,
 	electeurs: []
 },
@@ -47,7 +60,7 @@ const prompt = require('prompt-sync')();{
     CIN : "AB942316",
 	nom : "Lekjaa",
 	prenom : "Fouzi",
-	partiPolitique : " Indépendant",
+	partiPolitique : "Independant",
 	age: 55,
 	electeurs: ["JI236585"]
 }
@@ -128,6 +141,12 @@ let choix ;
                 let listeTriee = TrierCandidatsDecroissant(candidats);
                 afficherCandidats (listeTriee)
                 break;
+                case "c":
+                    let parti = prompt("Entrez le nom du parti politique : ");
+                    console.log("\n--- Candidats du parti : " + parti + " ---");
+                    let listeFiltree = filtrerParParti(candidats, parti);
+                    afficherCandidats (listeFiltree);
+                    break;
 
                }
                 break;
@@ -136,6 +155,10 @@ let choix ;
                 break;
                 default:
                     console.log("Choix invalide, veuillez réessayer")
+
+    }
+    if (choix !== "0") {
+        prompt("\nAppuyez sur Entrée pour continuer...");
     }
 
   }
