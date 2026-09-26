@@ -5,13 +5,13 @@ const prompt = require('prompt-sync')();{
             return;
         }
         for(let i = 0; i<liste.length; i++){
-            let C = liste[i]
+            let Count = liste[i]
             console.log(
-            (i + 1) + ". CIN :" + C.CIN +
-            " | " + C.prenom +" "+ C.nom + 
-            " |  partipolitique:" + C.partiPolitique + 
-            " | age :" + C.age +
-            " | votes :" + C.electeurs.length)
+            (i + 1) + ". CIN :" + Count.CIN +
+            " | " + Count.prenom +" "+ Count.nom + 
+            " |  partipolitique:" + Count.partiPolitique + 
+            " | age :" + Count.age +
+            " | votes :" + Count.electeurs.length)
         }
     }
     
@@ -39,6 +39,24 @@ const prompt = require('prompt-sync')();{
         }
         return resultat;
     }
+    function verifierSiElecteurAdejaVote(liste, CINElecteur){
+        for(let i = 0; i<liste.length; i++){
+            for (let j = 0; j<liste[i].electeurs.length; j++){
+                if (liste[i].electeurs[j] === CINElecteur){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    function chercherCandidatParCin(liste, cinRecherche){
+            for(let i = 0; i < liste.length; i++){
+                if (liste[i].CIN.trim().toUpperCase() === cinRecherche.trim().toUpperCase()) {
+                    return liste[i];
+            }
+        }
+        return null;
+} 
 
   let candidats = [{
 	CIN : "HA213453",
@@ -62,13 +80,13 @@ const prompt = require('prompt-sync')();{
 	prenom : "Fouzi",
 	partiPolitique : "Independant",
 	age: 55,
-	electeurs: ["JI236585"]
+	electeurs: []
 }
  
 ];
 let choix ;
   do{
-    console.log("\n----------------menu------------------")
+    console.log("\n==================menu=================")
     console.log("1: Ajouter un nouveau candidat")
     console.log("2: Ajouter plusieurs candidats à la fois")
     console.log("3:Afficher la liste des candidats")
@@ -84,19 +102,19 @@ let choix ;
         case "1":
             let CIN = prompt("tapez le CIN: ")
             let nom = prompt("tapez le nom : ")
-            let prenom = prompt ("ecrire le prenom : ")
+            let prenom = prompt ("tapez le prenom : ")
             let partiPolitique = prompt("tapez la partiPolitique : ")
             let age = Number(prompt ("tapez l'age : "))
-            candidats[candidats.length] ={
+            candidats.push({
             CIN : CIN,
             nom : nom,
             prenom : prenom,
             partiPolitique : partiPolitique, 
             age :age,
             electeurs: []
-            };
+            });
             console.log(" Candidat ajouté avec succès !");
-            console.log("\n---- Nouvelle liste des candidats ---");
+            console.log("\n=============Nouvelle liste des candidats==================");
             afficherCandidats(candidats)
             break;
          case "2":
@@ -111,21 +129,21 @@ let choix ;
                     let prenom = prompt ("ecrire le prenom : ")
                     let partiPolitique = prompt("tapez la partiPolitique : ")
                     let age = Number(prompt ("tapez l'age : "))
-                    candidats[candidats.length] = {
+                    candidats.push({
                     CIN : CIN,
                     nom : nom,
                     prenom : prenom,
                     partiPolitique : partiPolitique, 
                     age : age,
                     electeurs: []
-                 };
+                 });
                 }
                  console.log(nombre +" candidats ajoutés avec succès !");
-                 console.log("\n---- Nouvelle liste des candidats ---");
+                 console.log("\n============Nouvelle liste des candidats===========");
                  afficherCandidats(candidats);
                 break;
              case "3":
-                console.log("\n--- AFFICHER LA LISTE DES CANDIDATS ---");
+                console.log("\n==========AFFICHER LA LISTE DES CANDIDATS===========");
                 console.log("a. Afficher la liste normale");
                 console.log("b. Trier par nombre de votes (Ordre décroissant)");
                 console.log("c. Filtrer par parti politique");
@@ -133,11 +151,11 @@ let choix ;
 
                switch (sousChoix) {
                case "a":
-               console.log("\n--- Liste normale ---");
+               console.log("\n=============== Liste normale ===================");
                afficherCandidats(candidats);
                break;
                case "b":
-                console.log("\n-----classement des gagnants (Ordre décroissant)------")
+                console.log("\n=============classement des gagnants=============")
                 let listeTriee = TrierCandidatsDecroissant(candidats);
                 afficherCandidats (listeTriee)
                 break;
@@ -150,12 +168,66 @@ let choix ;
 
                }
                 break;
+                case "4":
+                    console.log("\n============voter pour un candidats============")
+                    let CINElecteur = prompt("Entrez votre CIN (Électeur) : ");
+                    if (verifierSiElecteurAdejaVote(candidats, CINElecteur)){
+                        console.log("\n Vous avez déjà voté et vous  n’avez pas le droit de  modifier votre vote ni de voter à nouveau")
+                        break;
+                    }
+                    let CINCandidat = prompt("Entrez le CIN du candidat pour lequel vous voulez voter : ");
+                    let candidatTrouve = chercherCandidatParCin(candidats, CINCandidat); 
+                    if (candidatTrouve !== null){
+                       candidatTrouve.electeurs.push(CINElecteur);
+                        console.log("\n Votre vote a été enregistré avec succès pour " + candidatTrouve.prenom + " " + candidatTrouve.nom + " !");
+                    }else{
+                        console.log("\n Aucun candidat trouvé avec ce CIN.");
+                    }
+                    break; 
+                    case "5":
+                        console.log("========modifier les informations d'un candidat===========")
+                        let CinRechercher = prompt("entrez CIN du candidat à modifier ")
+                        let candidat = chercherCandidatParCin(candidats , CinRechercher)
+
+                        if (candidat !== null){
+                            console.log("\n Candidat trouvé : " + candidat.prenom + " " + candidat.nom)
+                            console.log("1 : modifier la partiPolitique")
+                            console.log("2 : modifier l'age")
+                            let option = prompt("Choisissez une option 1 ou 2 : ");
+    
+                           switch(option){ 
+                           case "1":{
+                                   let nouveauPartiPolitique = prompt ("entrez nouveau partiPolitique ")
+                                    if (nouveauPartiPolitique.trim() !== ""){
+                                      candidat.partiPolitique = nouveauPartiPolitique
+                                      console.log("\n Parti politique modifié avec succès ")
+                                    }else{
+                                          console.log("\n Modification annulée ")
+                                        }
+                                        break;
+                                    }
+                            case "2":{
+                                    let nouvelAge = Number(prompt("entrer le nouveau age "))
+                                    if(!isNaN (nouvelAge) && nouvelAge > 0 ){
+                                      candidat.age = nouvelAge
+                                      console.log("\n l'age modifié avec succès ")
+                                    }else{
+                                         console.log("\n modification annulée ")
+                                    }
+                                    break;
+                                    }
+                                    default:
+                                    console.log("\n Option invalide")
+                            } 
+                        }else{
+                              console.log("\n Aucun candidat trouvé avec ce CIN")
+                        }
+                        break;
                 case "0":
                 console.log("quitter..")
                 break;
                 default:
                     console.log("Choix invalide, veuillez réessayer")
-
     }
     if (choix !== "0") {
         prompt("\nAppuyez sur Entrée pour continuer...");
