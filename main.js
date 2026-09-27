@@ -56,6 +56,16 @@ const prompt = require('prompt-sync')();{
             }
         }
         return null;
+}
+function chercherCandidatParNom(liste , NomRecherche){
+    let resultat = []
+    for ( let i = 0; i < liste.length; i++){
+        if (liste[i].nom.trim().toLowerCase() === NomRecherche.trim().toLowerCase()){
+            resultat.push(liste[i])
+        }
+    }
+    return resultat;
+
 } 
 
   let candidats = [{
@@ -94,7 +104,6 @@ let choix ;
     console.log("5:Modifier les informations d'un candidat")
     console.log("6: Supprimer un candidat ")
     console.log("7:Rechercher des candidats")
-    console.log("8:Statistiques de l'élection")
     console.log("0:quitter")
 
     choix = prompt("Tapez votre choix : ")
@@ -219,20 +228,48 @@ let choix ;
                                     default:
                                     console.log("\n Option invalide")
                             } 
-                        }else{
-                              console.log("\n Aucun candidat trouvé avec ce CIN")
+                            }else{
+                                 console.log("\n Aucun candidat trouvé avec ce CIN")
                         }
                         break;
-                case "0":
-                console.log("quitter..")
-                break;
-                default:
-                    console.log("Choix invalide, veuillez réessayer")
-    }
-    if (choix !== "0") {
-        prompt("\nAppuyez sur Entrée pour continuer...");
-    }
-
-  }
-  while (choix !== "0");
-}
+                        case "6":
+                        console.log("==============supprimer un candidat=================")
+                            let cinASupprimer = prompt("Entrez le CIN du candidat à supprimer : ")
+                            let index = -1
+                            for (let i = 0; i < candidats.length; i++){
+                                 if (candidats[i].CIN.trim().toUpperCase() === cinASupprimer.trim().toUpperCase()){
+                                    index = i;
+                                    break;
+                                 }
+                            }
+                            if (index !== -1){
+                               let candidatSupprime = candidats[index];
+                               candidats.splice(index,1)
+                              console.log("\n" + candidatSupprime.prenom + " " + candidatSupprime.nom + " a été bien supprimé !"); 
+                            }else{
+                                 console.log("\n Aucun candidat trouvé avec ce CIN.");
+                            }
+                            break;
+                            case "7":
+                                console.log("==============Rechercher des candidats==============")
+                                let nomCherche = prompt("entrer le nom de camdidat : ")
+                                let CandidatTrouve = chercherCandidatParNom(candidats , nomCherche)
+                                if (CandidatTrouve.length > 0){
+                                    console.log("\n=====Candidat(s) trouvé(s)=====")
+                                    afficherCandidats(CandidatTrouve);
+                                }else{
+                                    console.log("\n Aucun candidat trouvé avec ce nom")
+                                }
+                                break;
+                                case "0":
+                                    console.log("quitter...")
+                                    break;
+                                    default:
+                                        console.log("Choix invalide, veuillez réessayer")
+                            }
+                            if (choix !== "0"){
+                                prompt("\nAppuyez sur Entrée pour continuer...")
+                            }                     
+                         }
+                          while(choix !== "0");
+        }
