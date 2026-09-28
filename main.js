@@ -7,7 +7,7 @@ const prompt = require('prompt-sync')();{
         for(let i = 0; i<liste.length; i++){
             let Count = liste[i]
             console.log(
-            (i + 1) + ". CIN :" + Count.CIN +
+             (i + 1) +" .CIN :" + Count.CIN +
             " | " + Count.prenom +" "+ Count.nom + 
             " |  partipolitique:" + Count.partiPolitique + 
             " | age :" + Count.age +
@@ -34,7 +34,7 @@ const prompt = require('prompt-sync')();{
             let partiCandidat = liste[i].partiPolitique.toLowerCase();
             let partiSaisi = partiRecherche.toLowerCase();
             if (partiCandidat === partiSaisi) {
-                resultat[resultat.length] = liste[i];
+                resultat.push(liste[i]);
             }
         }
         return resultat;
@@ -124,7 +124,7 @@ function affichageStatique(liste){
 ];
 let choix ;
   do{
-    console.log("\n==========================menu=============================")
+    console.log("\n==========================MENU=============================")
     console.log("1: Ajouter un nouveau candidat")
     console.log("2: Ajouter plusieurs candidats à la fois")
     console.log("3:Afficher la liste des candidats")
@@ -152,7 +152,7 @@ let choix ;
             electeurs: []
             });
             console.log(" Candidat ajouté avec succès !");
-            console.log("\n=======================Nouvelle liste des candidats============================");
+            console.log("\n=======================NOUVELLE LISTE DES CANDIDATS============================");
             afficherCandidats(candidats)
             break;
          case "2":
