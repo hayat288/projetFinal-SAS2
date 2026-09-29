@@ -72,7 +72,7 @@ function affichageStatique(liste){
     console.log("a. Nombre total de candidats");
     console.log("b. Nombre total de votes exprimés");
     let sousChoix = prompt("Choisissez une option (a ou b) : ");
-    switch (sousChoix.trim().toLowerCase()) {
+    switch (sousChoix.toLowerCase()) {
         case "a":
             console.log("\nLe nombre total de candidats : " + liste.length);
             break;
@@ -84,7 +84,7 @@ function affichageStatique(liste){
             console.log("\n● Nombre total de votes : " + totalVotes);
             break;
             default:
-                console.log("Option invalide !");
+                console.log("Option invalide ");
 }
 }
 
@@ -116,7 +116,7 @@ function affichageStatique(liste){
      CIN : "AA121234",
 	nom : "Elhilaly",
 	prenom : "Amin",
-	partiPolitique : "parti E",
+	partiPolitique : "parti A",
 	age: 30,
 	electeurs: ["DA353666"]
 }
